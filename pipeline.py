@@ -1,4 +1,8 @@
+import logging
+
 from extract import extract
+
+logger = logging.getLogger('pipeline')
 
 def pipeline():
     """Main data pipeline
@@ -8,8 +12,14 @@ def pipeline():
     Returns -
         None
     """
+    # Set up logging
+    FORMAT = '[{levelname} - {name} - {asctime}] {message}'
+    logging.basicConfig(format=FORMAT, style='{', level=logging.INFO)
+
     # Extract
+    logger.info('Start extraction')
     df = extract()
+    logger.info('Finished extraction')
     print(df)
 
     # Transform

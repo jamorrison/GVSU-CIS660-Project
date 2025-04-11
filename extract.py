@@ -1,8 +1,16 @@
+# There is a FutureWarning from Pandas about downcasting in a replace(...) call
+# For now, I just want to ignore this, so filter those messages
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 import requests
 import zipfile
+import logging
 import pandas as pd
 import numpy as np
 import os
+
+logger = logging.getLogger('extract')
 
 # Code is based on this StackOverflow post:
 #     https://stackoverflow.com/questions/16694907/download-large-file-in-python-with-requests
@@ -92,8 +100,9 @@ def extract():
     try:
         download_file(kaggle_file, local_file)
     except requests.HTTPError:
-        print(f'Unable to download file from: {kaggle_file}')
+        logger.error(f'Unable to download file from: {kaggle_file}')
         exit(1)
+    logger.info(f'{local_file} successfully downloaded')
 
     # Extract data
     df1, df2, df3 = retrieve_csv_files(local_file)
@@ -101,11 +110,12 @@ def extract():
     # Merge data
     df = pd.merge(df1, df2, on=['year', 'lgID', 'tmID'], how='left')
     df = pd.merge(df3, df, on=['year', 'lgID', 'tmID'], how='left', suffixes=['_TvT', '_split'])
+    logger.info('Data successfully joined')
 
     try:
         os.remove(local_file)
     except FileNotFoundError:
-        print('Attempted to delete {local_file}, but could not find it')
+        logger.error(f'Attempted to delete {local_file}, but could not find it')
 
     return df
 
