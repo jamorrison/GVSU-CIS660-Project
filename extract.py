@@ -48,7 +48,7 @@ def csv_to_df(data):
     lines = [row.split(',') for row in data.split('\n')]
 
     tmp = pd.DataFrame(lines)
-    tmp.columns = tmp.iloc[0]
+    tmp.columns = tmp.iloc[0].tolist()
     tmp = tmp.drop(tmp.index[0])
 
     # This returns a FutureWarning that should be addressed, but will be ignored for now
