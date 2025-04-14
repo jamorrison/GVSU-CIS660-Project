@@ -1,6 +1,7 @@
 import logging
 
 from extract import extract
+from transform import transform
 
 logger = logging.getLogger('pipeline')
 
@@ -20,10 +21,11 @@ def pipeline():
     logger.info('Start extraction')
     df = extract()
     logger.info('Finished extraction')
-    print(df)
 
     # Transform
-    # TODO: fill out transformation of data
+    logger.info('Start transformation')
+    df = transform(df)
+    logger.info('Finished transformation')
 
     # Load
     # TODO: fill out loading of data into database
