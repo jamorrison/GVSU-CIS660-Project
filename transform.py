@@ -3,11 +3,6 @@ import pandas as pd
 
 logger = logging.getLogger('transform')
 
-# Implement at least three data transformation steps. These could include data cleansing, normalization, aggregation, and/or enrichment.
-#     - Cleaning & Preprocessing: Handle missing values, duplicates, data type inconsistencies/duplicates.
-#     - Normalization / Aggregation: Standardize columns (e.g., numeric scaling), group data for summary.
-#     - Feature Engineering: Create at least one new feature or variable that adds value (e.g., a ratio, categorization, or date-time extraction)..
-
 def drop_unwanted_cols(df):
     """Remove unwanted columns from input DataFrame.
 
@@ -113,15 +108,57 @@ def conferences_and_divisions(df):
     """
     return df[df.year >= 1974]
 
-def transformation_2(df):
-    """Drop any rows with 1 or more NAs
+def winning_percentage(df, w, l, t, otl):
+    """Calculate the winning percentage taking into account the possibility of ties.
+
+    Inputs -
+        df   - DataFrame
+        w    - wins column name
+        l    - losses column name
+        t    - ties column name
+        otl  - overtime losses column name
+    Returns -
+        list of floats
+    """
+    percentages = []
+    for i in range(len(df[w])):
+        n_wins = df[w][i]
+        n_loss = df[l][i]
+        n_ties = df[t][i]
+        n_otls = df[otl][i]
+        if n_ties < 0 and n_otls < 0:
+            logger.error('found a problem! {df[w][i]}, {df[l][i]}, {df[t][i]}, {df[otl][i]}')
+            exit(1)
+
+        if n_ties >= 0:
+            if n_wins + n_loss + n_ties == 0:
+                percentages.append(-1.000)
+            else:
+                percentages.append( round((2*n_wins + n_ties) / (2*(n_wins+n_loss+n_ties)), 3) )
+        elif n_otls >= 0:
+            if n_wins + n_loss + n_otls == 0:
+                percentages.append(-1.000)
+            else:
+                percentages.append( round(n_wins / (n_wins+n_loss+n_otls), 3) )
+
+    return percentages
+
+def add_winning_percentages(df):
+    """Add extra winning percentage columns
 
     Inputs -
         df - DataFrame
     Returns -
         DataFrame
     """
-    return df.dropna(ignore_index=True)
+    tmp = df.copy(deep=True)
+
+    tmp['WP_TvT'] = winning_percentage(df, 'W_TvT', 'L_TvT', 'T_TvT', 'OTL_TvT')
+    tmp['WP_split'] = winning_percentage(df, 'W_split', 'L_split', 'T_split', 'OTL_split')
+    tmp['WP_home'] = winning_percentage(df, 'hW', 'hL', 'hT', 'hOTL')
+    tmp['WP_road'] = winning_percentage(df, 'rW', 'rL', 'rT', 'rOTL')
+
+    return tmp
 
 def transform(df):
     """Transform ingested data.
@@ -158,6 +195,10 @@ def transform(df):
     # Transformation 5 - restrict to years when both conferences and divisions existed
     df = conferences_and_divisions(df)
     logger.info('Successfully selected years with both conferences and divisions')
+
+    #  Transformation 6 - add winning percentage columns
+    df = add_winning_percentages(df)
+    logger.info('Successfully calculated winning percentages')
 
     # Reset index after transformations
     df.reset_index(drop=True, inplace=True)
