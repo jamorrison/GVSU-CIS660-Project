@@ -2,6 +2,7 @@ import logging
 
 from extract import extract
 from transform import transform
+from loading import load
 
 logger = logging.getLogger('pipeline')
 
@@ -28,7 +29,9 @@ def pipeline():
     logger.info('Finished transformation')
 
     # Load
-    # TODO: fill out loading of data into database
+    logger.info('Start database loading')
+    load(df)
+    logger.info('Finished database loading')
 
     return None
 
