@@ -3,6 +3,7 @@ import logging
 from extract import extract
 from transform import transform
 from loading import load
+from data_analysis import do_analysis
 
 logger = logging.getLogger('pipeline')
 
@@ -32,6 +33,11 @@ def pipeline():
     logger.info('Start database loading')
     load(df)
     logger.info('Finished database loading')
+
+    # Data analysis and visualization
+    logger.info('Start data analysis')
+    do_analysis()
+    logger.info('Finished data analysis')
 
     return None
 
