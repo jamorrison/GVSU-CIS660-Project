@@ -15,14 +15,14 @@ def drop_unwanted_cols(df):
     """
     return df.drop(
         columns=[
-               'PIM' , 'BenchMinor',   'PPG',   'PPC',   'SHA',
-               'PKG' ,        'PKC',   'SHF',  'SepW',  'SepL',
-               'SepT',      'SepOL',  'OctW',  'OctL',  'OctT',
-              'OctOL',       'NovW',  'NovL',  'NovT', 'NovOL',
-               'DecW',       'DecL',  'DecT', 'DecOL',  'JanW',
-               'JanL',       'JanT', 'JanOL',  'FebW',  'FebL',
-               'FebT',      'FebOL',  'MarW',  'MarL',  'MarT',
-              'MarOL',       'AprW',  'AprL',  'AprT', 'AprOL',
+            'PIM' , 'BenchMinor',   'PPG',   'PPC',   'SHA',
+            'PKG' ,        'PKC',   'SHF',  'SepW',  'SepL',
+            'SepT',      'SepOL',  'OctW',  'OctL',  'OctT',
+            'OctOL',       'NovW',  'NovL',  'NovT', 'NovOL',
+            'DecW',       'DecL',  'DecT', 'DecOL',  'JanW',
+            'JanL',       'JanT', 'JanOL',  'FebW',  'FebL',
+            'FebT',      'FebOL',  'MarW',  'MarL',  'MarT',
+            'MarOL',       'AprW',  'AprL',  'AprT', 'AprOL',
             'playoff',
         ]
     )
@@ -196,11 +196,11 @@ def transform(df):
     df = conferences_and_divisions(df)
     logger.info('Successfully selected years with both conferences and divisions')
 
+    # Reset index after before last transformation for looping through rows
+    df.reset_index(drop=True, inplace=True)
+
     #  Transformation 6 - add winning percentage columns
     df = add_winning_percentages(df)
     logger.info('Successfully calculated winning percentages')
-
-    # Reset index after transformations
-    df.reset_index(drop=True, inplace=True)
 
     return df
