@@ -14,13 +14,26 @@ def analysis(df):
     Returns -
         None
     """
-    # TODO: Number of teams in NHL by year
+    # Number of teams in NHL by year
+    teams_per_year = df[['tmID', 'year']].drop_duplicates().groupby(['year']).count()
+    teams_per_year.columns = ['n_teams']
+    print('\n\nNumber of teams in the NHL by year')
+    print(teams_per_year)
 
-    # TODO: Mean winning percentage (WP_split)
+    # Mean winning percentage (WP_split)
+    avg_winning_percentage = df[['tmID', 'WP_split']].drop_duplicates()
+    print('\n\nAverage winning percentage across all teams and years')
+    print('\t{}'.format(round(avg_winning_percentage['WP_split'].mean(), 3)))
 
-    # TODO: Mean home winning percentage (WP_home)
+    # Mean home winning percentage (WP_home)
+    avg_home_winning_percentage = df[['tmID', 'WP_home']].drop_duplicates()
+    print('\n\nAverage home winning percentage across all teams and years')
+    print('\t{}'.format(round(avg_home_winning_percentage['WP_home'].mean(), 3)))
 
-    # TODO: Mean road winning percentage (WP_road)
+    # Mean road winning percentage (WP_road)
+    avg_road_winning_percentage = df[['tmID', 'WP_road']].drop_duplicates()
+    print('\n\nAverage road winning percentage across all teams and years')
+    print('\t{}'.format(round(avg_road_winning_percentage['WP_road'].mean(), 3)))
 
     return None
 
