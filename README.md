@@ -14,6 +14,7 @@ be available via `pip`.
 
 |  Library   | Version |
 |:----------:|:-------:|
+| python     | 3.12.1  |
 | matplotlib | 3.10.0  |
 | requests   | 2.31.0  |
 | warnings   | 3.12.1  |
