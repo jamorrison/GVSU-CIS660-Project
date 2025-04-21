@@ -65,7 +65,7 @@ def visualize(df):
     """
     # Set up DataFrames for visualizations first
     # Visualization 1 - goals scored vs goals against (colored by record (>=0.500, <0.500))
-    vis1 = df[['tmID', 'GF', 'GA', 'WP_split']].drop_duplicates(j)
+    vis1 = df[['tmID', 'GF', 'GA', 'WP_split']].drop_duplicates()
     vis1['color'] = ['red' if x >= 0.5 else 'black' for x in vis1['WP_split']]
 
     # Visualization 2 - mean goals scored by year per team
