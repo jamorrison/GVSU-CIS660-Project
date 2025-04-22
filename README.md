@@ -10,6 +10,7 @@ a SQLite database, and then outputs a few interesting statistics and visualizati
 All dependencies for the project can be installed via [conda](https://anaconda.org).
 ```
 conda env create -f environment.yml
+conda activate hockey_project
 ```
 
 ### Python Libraries Used
